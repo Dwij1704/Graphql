@@ -4,11 +4,13 @@ const User = require('../models/user');
 const getUser = async token => {
   try {
     if (token) {
-      const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-      return await User.findById(userId);
+      const decodedToken = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
+      console.log('Decoded Token:', decodedToken);
+      return await User.findById(decodedToken.userId);
     }
     return null;
   } catch (err) {
+    console.error(err);
     return null;
   }
 };
